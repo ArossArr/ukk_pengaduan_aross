@@ -39,7 +39,7 @@ $routes->get('/register','LoginC::registerview');
 $routes->post('/sregister','LoginC::svreg');
 // Masyarakat
 $routes->get('/masyarakat','MasyarakatC::view');
-$routes->post('/smasyarakat','MasyarakatC::edit');
+$routes->post('/smasyarakat','MasyarakatC::sv');
 $routes->get('/masyarakat/delete/(:segment)','MasyarakatC::deleted/$1');
 $routes->post('/masyarakat/edit/(:segment)','MasyarakatC::edit/$1');
 // Petugas
@@ -54,6 +54,9 @@ $routes->get('/pengaduan/delete/(:segment)','PengaduanC::deleted/$1');
 // tanggapan
 $routes->get('/tanggapan','TanggapanC::view');
 $routes->post('/stanggapan','TanggapanC::svt');
+// profil
+$routes->get('/profil','LoginC::lihatprofil');
+$routes->post('/editp','LoginC::editp');
 
 
 /*

@@ -86,4 +86,67 @@ class LoginC extends BaseController{
         ]);
         return redirect('login');
     }
+    public function lihatprofil()
+    {
+        $petugas = new PetugasM();
+        $masy = new MasyarakatM();
+        if(session('level')=='masyarakat'){
+            $data['user'] = $masy->where('nik',session('nik'))->findAll();
+        } else {
+            $data['user'] = $petugas->where('id_petugas',session('id_petugas'))->findAll();
+        }
+        return view('view/profilv',$data);
+    }
+    public function editp()
+    {
+        $masyy = new MasyarakatM();
+        $ptgs = new PetugasM();
+        $id = $this->request->getPost('id');
+        $nama = $this->request->getPost('nama');
+        $username = $this->request->getPost('username');
+        $tlp = $this->request->getPost('tlp');
+        $pass_old = $this->request->getPost('password_old');
+        $pass_new = $this->request->getPost('password_new');
+        if(session('level')=='masyarakat'){
+            $datamasy = $masyy->where('id_masyarakat',$id)->first();
+            if(empty($pass_old)){
+                $data = [
+                    'nama'=>$nama,
+                    'username'=>$username,
+                    'tlp'=>$tlp,
+                ];
+            } else {
+                if(password_verify($pass_old,$datamasy['password'])){
+                    $data = [
+                        'nama'=>$nama,
+                        'username'=>$username,
+                        'tlp'=>$tlp,
+                        'password'=>password_hash($pass_new,PASSWORD_DEFAULT)
+                    ];
+                }
+            }
+            $masyy->update($id,$data);
+        } else {
+            $dataptgs = $ptgs->where('id_petugas',$id)->first();
+            if(empty($pass_old)){
+                $data = [
+                    'nama'=>$nama,
+                    'username'=>$username,
+                    'tlp'=>$tlp,
+                ];
+            } else {
+                if(password_verify($pass_old,$dataptgs['password'])){
+                    $data = [
+                        'nama'=>$nama,
+                        'username'=>$username,
+                        'tlp'=>$tlp,
+                        'password'=>password_hash($pass_new,PASSWORD_DEFAULT)
+                    ];
+                }
+            }
+            $ptgs->update($id,$data);
+        }
+        session()->setFlashdata('message','Update Profil Berhasil');
+        return redirect('profil');
+    }
 }
